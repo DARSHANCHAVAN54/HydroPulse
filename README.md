@@ -28,6 +28,186 @@ hydropulse-automation-platform/
 ├── hydropulse_medallion_pipeline.py
 ```
 ```text
+## Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/<your-username>/hydropulse-automation-platform.git
+cd hydropulse-automation-platform
+```
+
+---
+
+## Step 2: Upload Project to Databricks
+
+1. Open Databricks Workspace.
+2. Create a new folder named:
+
+```text
+hydropulse-automation-platform
+```
+
+3. Upload:
+
+* notebooks/
+* config/
+* scripts/
+
+folders into the workspace.
+
+---
+
+## Step 3: Configure Data Source
+
+Upload sensor data files to your configured S3 location.
+
+Example:
+
+```text
+s3://hydropulse-data/raw/
+```
+
+Update the source path inside the DLT notebook if required.
+
+---
+
+## Step 4: Create Schema
+
+Execute:
+
+```sql
+CREATE SCHEMA IF NOT EXISTS hydropulse_db2;
+```
+
+---
+
+## Step 5: Create DLT Pipeline
+
+1. Navigate to **Workflows → Delta Live Tables**.
+2. Click **Create Pipeline**.
+3. Configure:
+
+| Setting          | Value                                   |
+| ---------------- | --------------------------------------- |
+| Pipeline Name    | HydroPulse                              |
+| Source Code      | notebooks/hydropulse_medallion_pipeline |
+| Target Schema    | hydropulse_db2                          |
+| Storage Location | DBFS or S3 location                     |
+| Pipeline Mode    | Continuous or Triggered                 |
+
+4. Save the pipeline.
+
+---
+
+## Step 6: Start Pipeline
+
+Click:
+
+```text
+Start
+```
+
+The pipeline automatically performs:
+
+* Auto Loader ingestion
+* Bronze table creation
+* Silver table validation
+* Quarantine record separation
+* Gold table generation
+
+---
+
+## Step 7: Verify Tables
+
+After successful execution, verify the following tables:
+
+### Bronze
+
+```sql
+SELECT * FROM bronze_iot LIMIT 10;
+```
+
+### Silver
+
+```sql
+SELECT * FROM silver_iot LIMIT 10;
+```
+
+### Quarantine
+
+```sql
+SELECT * FROM quarantine_iot LIMIT 10;
+```
+
+### Gold Alerts
+
+```sql
+SELECT * FROM gold_alerts LIMIT 10;
+```
+
+### Gold Sensor Hourly
+
+```sql
+SELECT * FROM gold_sensor_hourly LIMIT 10;
+```
+
+### Gold Farm KPI
+
+```sql
+SELECT * FROM gold_farm_kpi LIMIT 10;
+```
+
+---
+
+## Step 8: Build Dashboard
+
+1. Open Databricks SQL.
+2. Create a new Dashboard.
+3. Connect the following datasets:
+
+```text
+workspace.hydropulse_db2.gold_alerts
+workspace.hydropulse_db2.gold_sensor_hourly
+workspace.hydropulse_db2.gold_farm_kpi
+```
+
+4. Create visualizations:
+
+   * Alert Summary
+   * Hourly Sensor Trends
+   * Farm KPI Cards
+   * Environmental Health Metrics
+
+5. Save and publish the dashboard.
+
+---
+
+## Maintenance
+
+To clean historical data:
+
+```bash
+chmod +x scripts/s3_data_purge.sh
+./scripts/s3_data_purge.sh
+```
+
+Use only in non-production environments unless approved.
+
+---
+
+## Expected Output
+
+After deployment, the platform provides:
+
+* Automated file ingestion
+* Data quality enforcement
+* Quarantine management
+* Alert generation
+* Hourly sensor analytics
+* Farm KPI reporting
+* Interactive Databricks dashboard
+
+```
+```text
 End-to-End Data Flow
 
 Sensor Data Files
