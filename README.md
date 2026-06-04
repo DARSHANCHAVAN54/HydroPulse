@@ -29,8 +29,6 @@ hydropulse-automation-platform/
 │ └── hydropulse_medallion_pipeline.py
 ├── dashboards/
 │ └── hydro_dashboard_assets/
-└── scripts/
-└── s3_data_purge.sh
 ```
 ```text
 End-to-End Data Flow
