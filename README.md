@@ -31,3 +31,29 @@ hydropulse-automation-platform/
 │ └── hydro_dashboard_assets/
 └── scripts/
 └── s3_data_purge.sh
+```
+```text
+End-to-End Data Flow
+Sensor Data Files
+        │
+        ▼
+Auto Loader
+        │
+        ▼
+bronze_iot
+        │
+        ▼
+silver_iot
+        │
+ ┌──────┴──────┐
+ ▼             ▼
+Valid      Invalid
+Data        Data
+ │             │
+ ▼             ▼
+Gold       quarantine_iot
+Tables
+ │
+ ▼
+Databricks Dashboard
+```
