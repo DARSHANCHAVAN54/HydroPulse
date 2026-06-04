@@ -1,4 +1,4 @@
-```markdown
+
 # HydroPulse: Hydroponics Telemetry & Automation Data Platform
 
 An end-to-end IoT data platform built on the Databricks Medallion Architecture.
@@ -12,7 +12,7 @@ strict data-quality thresholds, isolates automated system alert states, and runs
 
 The repository is organized following a strict separation of concerns, decoupling orchestration configurations, infrastructure scripts, core processing logic, and analytical visual layouts:
 
-```text
+```
 hydropulse-automation-platform/
 ├── README.md                   # Comprehensive project documentation and execution playbook
 ├── requirements.txt            # Local Python dependencies for testing and development
@@ -28,8 +28,6 @@ hydropulse-automation-platform/
     └── s3_data_purge.sh        # Controlled script for administrative data purges
 
 ```
-
----
 
 ## 2. Technologies & Tools Used
 
