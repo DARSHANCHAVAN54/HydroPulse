@@ -25,10 +25,7 @@ hydropulse-automation-platform/
 ├── requirements.txt
 ├── config/
 │ └── dlt_pipeline_conf.json
-├── notebooks/
-│ └── hydropulse_medallion_pipeline.py
-├── dashboards/
-│ └── hydro_dashboard_assets/
+├── hydropulse_medallion_pipeline.py
 ```
 ```text
 End-to-End Data Flow
