@@ -1,0 +1,24 @@
+{
+  "id": "f946a470-fae0-4452-a44b-86883afcaa9e",
+  "pipeline_type": "WORKSPACE",
+  "name": "hydropulse_medallion_pipeline",
+  "configuration": {
+    "fs.s3a.access.key": "<YOUR_AWS_ACCESS_KEY>",
+    "fs.s3a.secret.key": "<YOUR_AWS_SECRET_KEY>"
+  },
+  "libraries": [
+    {
+      "glob": {
+        "include": "/Workspace/Users/<YOUR_EMAIL_ADDRESS>/hydropulse_dlt_pipeline"
+      }
+    }
+  ],
+  "schema": "hydropulse_db2",
+  "continuous": false,
+  "development": false,
+  "photon": true,
+  "channel": "CURRENT",
+  "catalog": "workspace",
+  "serverless": true,
+  "root_path": "/Workspace/Users/<YOUR_EMAIL_ADDRESS>/New Pipeline"
+}
