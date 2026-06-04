@@ -1,7 +1,10 @@
 ```markdown
-# HydroPulse: Real-Time Hydroponics Telemetry & Automation Data Platform
+# HydroPulse: Hydroponics Telemetry & Automation Data Platform
 
-An end-to-end, production-grade IoT data platform built on the Databricks Medallion Architecture. This system ingests real-time environmental telemetry (pH, TDS, temperature, humidity, water levels) from automated greenhouse microcontrollers, processes it using Delta Live Tables (DLT) streaming pipelines, enforces strict data-quality thresholds, isolates automated system alert states, and runs an executive analytics control dashboard.
+An end-to-end IoT data platform built on the Databricks Medallion Architecture.
+This system ingests real-time environmental telemetry (pH, TDS, temperature, humidity, water levels) from
+automated greenhouse microcontrollers, processes it using Delta Live Tables (DLT) streaming pipelines, enforces
+strict data-quality thresholds, isolates automated system alert states, and runs an executive analytics control dashboard.
 
 ---
 
@@ -11,7 +14,6 @@ The repository is organized following a strict separation of concerns, decouplin
 
 ```text
 hydropulse-automation-platform/
-├── .gitignore                  # Excludes local environments, caches, and cloud credentials
 ├── README.md                   # Comprehensive project documentation and execution playbook
 ├── requirements.txt            # Local Python dependencies for testing and development
 ├── config/
