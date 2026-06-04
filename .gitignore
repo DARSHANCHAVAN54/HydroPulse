@@ -1,0 +1,26 @@
+# Python build artifacts and caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.env
+
+# Jupyter and Databricks temporary notebooks
+.ipynb_checkpoints/
+.databricks/
+*.dbc
+
+# Operating system metadata
+.DS_Store
+Thumbs.db
+
+# Cloud provider credentials and local keys
+.aws/
+.azure/
+*.pem
+*creds*
+secrets.properties
