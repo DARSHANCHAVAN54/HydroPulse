@@ -20,16 +20,14 @@ The repository is organized following a clean, modular layout that keeps source 
 
 ```text
 hydropulse-automation-platform/
-├── .gitignore                  # Prevents committing local developer environments or credentials
-├── README.md                   # Core system documentation and run playbook
-├── requirements.txt            # Local development packages
+├── .gitignore
+├── README.md
+├── requirements.txt
 ├── config/
-│   └── dlt_pipeline_conf.json  # Declarative JSON metadata blueprint for DLT deployment
+│ └── dlt_pipeline_conf.json
 ├── notebooks/
-│   ├── 01_bronze_ingestion.py  # Ingestion notebook using Spark Auto Loader (cloud_files)
-│   ├── 02_silver_cleaning.py   # Cleansing logic and native DLT expectation rules
-│   └── 03_gold_analytical.py   # Gold Layer analytical KPI and alerting engine
+│ └── hydropulse_medallion_pipeline.py
 ├── dashboards/
-│   └── hydroponics_control.json# Exported definitions file for the control interface
+│ └── hydro_dashboard_assets/
 └── scripts/
-    └── s3_data_purge.sh        # Controlled script for administrative data cleaning
+└── s3_data_purge.sh
