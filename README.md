@@ -30,7 +30,7 @@ hydropulse-automation-platform/
 ```text
 ## Step 1: Clone the Repository
 
-```bash
+```
 git clone https://github.com/<your-username>/hydropulse-automation-platform.git
 cd hydropulse-automation-platform
 ```
