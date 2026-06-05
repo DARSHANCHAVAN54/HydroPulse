@@ -1,0 +1,24 @@
+{
+  "id": "f946a470-fae0-4452-a44b-86883afcaa9e",
+  "pipeline_type": "WORKSPACE",
+  "name": "hydropulse_medallion_pipeline",
+  "configuration": {
+    "fs.s3a.access.key": "Access_key",
+    "fs.s3a.secret.key": "secret_key"
+  },
+  "libraries": [
+    {
+      "glob": {
+        "include": "/Workspace/Users/darshananilchavan3@gmail.com/hydropulse_dlt_notebook"
+      }
+    }
+  ],
+  "schema": "hydropulse_db2",
+  "continuous": false,
+  "development": false,
+  "photon": true,
+  "channel": "CURRENT",
+  "catalog": "workspace",
+  "serverless": true,
+  "root_path": "/Workspace/Users/darshananilchavan3@gmail.com/New Pipeline 2026-06-02 21:14"
+}
