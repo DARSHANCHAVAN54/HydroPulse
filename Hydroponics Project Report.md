@@ -1,6 +1,6 @@
 ---
 
-## Part 3: Comprehensive Project Report
+## Comprehensive Project Report
 
 ### 1. Project Context & Agricultural Value
 Maintaining precise water quality parameters is a fundamental challenge in industrial hydroponics. Minor variations in pH balance can lock root systems, stopping nutrient absorption and causing entire crop lines to fail within hours. Similarly, tracking Total Dissolved Solids (TDS) is vital to ensure optimal fertilization levels without damaging vegetation. 
