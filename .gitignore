@@ -1,26 +1,19 @@
-# Python build artifacts and caches
+# Python bytecode
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-ENV/
+*.py[cod]
+*$py.class
+
+# Environments & credentials
 .env
-
-# Jupyter and Databricks temporary notebooks
-.ipynb_checkpoints/
-.databricks/
-*.dbc
-
-# Operating system metadata
-.DS_Store
-Thumbs.db
-
-# Cloud provider credentials and local keys
 .aws/
-.azure/
+credentials
 *.pem
-*creds*
-secrets.properties
+
+# Data files (Do not commit large datasets to GitHub)
+ingestion/*.csv
+ingestion/*.json
+
+# IDE and System Files
+.vscode/
+.idea/
+.DS_Store
