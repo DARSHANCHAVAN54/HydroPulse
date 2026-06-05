@@ -21,17 +21,17 @@ pip install -r requirements.txt
 aws configure
 ```
 
-## Run the local producer loop to stream raw records to your S3 landing path:
+### Run the local producer loop to stream raw records to your S3 landing path:
 
 ```bash
 python phase1_ingest.py
 ```
-2. Run the Medallion Infrastructure
+## 2. Run the Medallion Infrastructure
 Import hydropulse_dlt_notebook.py and Data_Audit_Notebook.py to your Databricks workspace.
 
 Create your Delta Live Tables asset using the structure details inside databricks/config/pipeline_settings.json.
 
-3. Orchestrate the Workflows DAG
+## 3. Orchestrate the Workflows DAG
 Navigate to Databricks Workflows and assemble your jobs sequentially:
 
 Task 1 (hydroflow): Triggers your Delta Live Tables processing.
