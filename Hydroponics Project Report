@@ -1,31 +1,34 @@
 ---
 
-## Part 3: Hydroponics Project Report
+## Part 3: Comprehensive Project Report
 
-### Executive Summary
-The objective of this project is to implement a robust, reliable data pipeline for micro-managing hydroponic crop environments. Precision monitoring of variables like pH balance, total dissolved solids (TDS), and temperature is critical to maximizing agricultural yield. 
+### 1. Project Context & Agricultural Value
+Maintaining precise water quality parameters is a fundamental challenge in industrial hydroponics. Minor variations in pH balance can lock root systems, stopping nutrient absorption and causing entire crop lines to fail within hours. Similarly, tracking Total Dissolved Solids (TDS) is vital to ensure optimal fertilization levels without damaging vegetation. 
 
-This architecture addresses typical real-world IoT challenges: dirty sensor anomalies, network communication latencies, and unstructured high-velocity data generation. By decoupling data collection from analytical workloads using an AWS S3 landing layer and Databricks Delta Live Tables, this platform guarantees robust data parsing, real-time alert dispatching, and secure operations telemetry.
+This project addresses these challenges by building an event-driven data platform that automatically processes streaming telemetry, tracks machinery usage rates, filters sensor errors, and sends instant critical environmental alerts.
 
----
+### 2. Operational Ingestion Layer (Local Client Pipeline)
+Data collection begins at your local environment layer, using an automated streaming component that processes an initial 50,571-row Kaggle dataset. To emulate physical hardware configurations, the system splits records into 10-row micro-batches sent every 10 seconds. 
 
-### Data Pipeline & Architecture Details
+To prevent timestamp casting errors down the line, the client engine validates incoming strings before they reach cloud storage. If a string lacks microsecond information, the script appends a `.000000` suffix to ensure it maps correctly to standard Spark timestamp formats.
 
-```text
-[Local IoT Producer] 
-       │ (boto3 JSON-Lines streaming batch upload)
-       ▼
-[AWS S3 Landing Zone]
-       │ (Databricks Auto Loader File Arrival Trigger)
-       ▼
-[Bronze Streaming Table] (Raw Ingestion)
-       │
-       ├───► [Quarantine Table] (Failed sensor rules for audit)
-       ▼
-[Silver View Layer] (Cleaned, Standardized, Scoring Engine)
-       │
-       ├───► [Gold Sensor Hourly] (Aggregation & Actuator Duties)
-       ├───► [Gold Farm KPI]     (Executive Health Overview)
-       └───► [Gold Alerts]       (Real-Time Anomalies Router)
+### 3. Lakehouse Medallion Architecture (DLT Platform)
+Processing is distributed across three clear architectural steps using Delta Live Tables:
 
-1. Ingestion Layer (Phase 1 Engine)Mechanics: The ingestion engine reads historical telemetry raw records from a 5.1 MB, 50,571-record footprint row-by-row, packaging data points into 10-record JSON-Lines batches streamed every 10 seconds.DLT Integrity Protection: Standard Python timestamp variables lack microseconds, which can cause target downstream Delta timestamp transformations to fail. The ingestion engine mitigates this by validating whether a dot (.) exists in the payload's timestamp column. If missing, it pads the incoming records string with .000000 to safeguard PySpark casting metrics.2. Medallion Processing Mechanics (DLT)Bronze Layer: Acts as an append-only historical dump. It utilizes Databricks Auto Loader (cloudFiles) to track schema modifications automatically and process incoming objects incrementally.Silver Layer: Applies complex agricultural domain constraints (sensor_ok). Records failing these criteria are isolated inside quarantine_iot. Valid data fields undergo standardizations, converting textual string flags (on/off) into numeric flags (1/0).Advanced Agriculture Scoring Engine: The Silver layer processes telemetry measurements to generate actionable data indices:Health Score: An additive metric assigning up to 20 points for every environmental parameter (pH, TDS, air temp, water temp, humidity) operating inside optimal target agricultural bands.Row Health / Stress Profiling: Evaluates systemic crop damage risks. It applies deductive penalty weights (-30 points per parameter violation) to deliver a clear metric between 0 and 100, instantly highlighting acute crop risk.3. Gold Analytical LayerThe Gold layer materializes structured summary views optimised for quick business reporting queries:gold_sensor_hourly: Groups readings by hour windows to compute precise operational rates, including pump duty cycles (percentage of active operational run-time) and parameter deviation stress occurrences.gold_farm_kpi: Aggregates crop metrics across the facility to track macro production yields and resource usage efficiency.gold_alerts: Isolates warnings and critical environmental metrics into a high-priority stream, building explicit risk notifications via string concatenations for rapid triage.Data Quality Assurance & OrchestrationAutomated Governance AuditBefore surfacing metrics on business intelligence tools, a data quality gate protects dashboards from corrupted statistics. The automated Audit Notebook implements two core structural checks:Volumetric Gate (Critical): Evaluates the data breakdown ratio across target environments:$$\text{Quarantine Rate} = \left( \frac{\text{Quarantine Count}}{\text{Silver Count} + \text{Quarantine Count}} \right) \times 100$$If the workflow identifies that the current quarantine percentage exceeds the maximum safety limit ($5\%$), it halts the pipeline to prevent corrupted records from skewing downstream operations.SLA Freshness Gate (Warning): Monitors time updates by cross-referencing system clock stamps against the latest records inside gold_sensor_hourly. If operational latency breaks a 2-hour window, warning notifications trigger automatically.Event-Driven OrchestrationRather than running on arbitrary cron schedules, the entire platform is event-driven. The multi-stage Databricks Workflow uses an S3 file-arrival sensor configuration. The moment the local ingestion program uploads a fresh batch of telemetry records to AWS, the workflow detects the new files, processes them through the Medallion pipeline, runs quality controls, and pushes clean metrics directly to the business dashboard.
+* **Bronze Stage (Raw Intake):** Collects incoming files exactly as they are written using Databricks **Auto Loader (`cloudFiles`)**. Instead of manually parsing directories, Auto Loader subscribes directly to an AWS SQS queue generated via CloudFormation. This event-driven pattern triggers file imports instantly when data lands in S3.
+* **Silver Stage (Quality Engineering & Calculations):** Telemetry streams go through deep schema filtering (`sensor_ok`). Records with corrupt IDs or invalid ranges are cleanly routed to `quarantine_iot`. Valid data is enriched with calculated operational metrics:
+  * *Cumulative Health Score:* Assigns up to 20 points for each variable operating inside optimal agricultural ranges (such as a pH between 5.5 and 6.5).
+  * *Stress Impact Tracking:* If a parameter hits warning limits, the system applies heavy deductive penalties (-30 points per violation) to generate a dynamic safety health indicator.
+* **Gold Stage (Business Intelligence Views):** Aggregates raw metrics into specialized analysis structures:
+  * `gold_sensor_hourly`: Tracks system performance metrics, including pump duty cycles (the percentage of active run-time per hour).
+  * `gold_alerts`: Filters out optimal logs to build dedicated risk alerts using clear text string concatenations.
+
+### 4. Data Governance & Workflow Orchestration
+Data quality is enforced through an automated multi-stage Databricks Workflows DAG. After the Delta Live Tables processing finishes, an automated evaluation notebook verifies two main metrics before updating production views:
+
+1. **Volumetric Data Quality Limit:** Computes structural error ratios across your current intake pipeline:
+$$\text{Quarantine Rate} = \left( \frac{\text{Quarantine Count}}{\text{Silver Count} + \text{Quarantine Count}} \right) \times 100$$
+If corrupt files make up more than $5\%$ of your total ingestion volume, the audit triggers a hard failure to protect downstream operational views from skewed statistics.
+2. **SLA Delivery Verification:** Evaluates data freshness by cross-referencing system clock values against the newest entries inside your gold layer tables. If latency drops below a 2-hour window, warning notifications trigger automatically.
+
+The entire architecture is event-driven. The moment your local script writes data to S3, your file arrival sensors trigger the Databricks workflow. This automatically processes the data, runs quality checks, and updates your operations dashboard without requiring manual oversight.
