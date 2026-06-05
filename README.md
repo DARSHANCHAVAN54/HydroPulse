@@ -4,7 +4,7 @@ An end-to-end data platform designed to process high-frequency smart hydroponic 
 
 ---
 
-## 🔒 Security Architecture Model
+## Security Architecture Model
 
 This pipeline decouples external network ingestion from backend analysis using two distinct security domains:
 1. **Local Machine Ingestion:** Uses a dedicated **IAM User** (`hydropulse-s3-ingest`) with static Access Keys configured via the CLI to push raw telemetry to S3.
@@ -12,7 +12,7 @@ This pipeline decouples external network ingestion from backend analysis using t
 
 ---
 
-## 🚀 Execution & Setup Guide
+## Execution & Setup Guide
 
 ### 1. Initialize Ingestion Engine
 Ensure you have your credential context set up on your local machine:
